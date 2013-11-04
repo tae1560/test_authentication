@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/capistrano/rbenv.git
+  revision: 362dbc02ef963c91425767e09b4848ff7be5132b
+  specs:
+    capistrano-rbenv (0.0.1)
+      capistrano
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -30,10 +37,12 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
     builder (3.1.4)
-    capistrano (3.0.0)
+    capistrano (3.0.1)
       i18n
       rake (>= 10.0.0)
       sshkit (>= 0.0.23)
+    capistrano-bundler (1.0.0)
+      capistrano (>= 3.0.0.pre)
     capybara (2.1.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -196,7 +205,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  capistrano (~> 3.0.0)
+  capistrano (~> 3.0.1)
+  capistrano-bundler
+  capistrano-rbenv!
   capybara (~> 2.1.0)
   coffee-rails (~> 4.0.0)
   database_cleaner (~> 1.0.1)

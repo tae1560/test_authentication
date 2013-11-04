@@ -1,10 +1,10 @@
-set :application, 'my app name'
-set :repo_url, 'git@example.com:me/my_repo.git'
+set :application, 'test_authentication'
+set :repo_url, 'https://github.com/tae1560/test_authentication.git'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
-# set :deploy_to, '/var/www/my_app'
-set :scm, :http
+set :deploy_to, '/home/tae1560/test_authentication'
+set :scm, :git
 
 # set :format, :pretty
 # set :log_level, :debug

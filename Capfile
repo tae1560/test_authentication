@@ -16,11 +16,14 @@ require 'capistrano/deploy'
 #   https://github.com/capistrano/rails/tree/master/migrations
 #
 # require 'capistrano/rvm'
-# require 'capistrano/rbenv'
+require 'capistrano/rbenv'
 # require 'capistrano/chruby'
-# require 'capistrano/bundler'
+require 'capistrano/bundler'
 # require 'capistrano/rails/assets'
 # require 'capistrano/rails/migrations'
+
+set :rbenv_type, :user # or :system, depends on your rbenv setup
+set :rbenv_ruby, '1.9.3-p286'
 
 # Loads custom tasks from `lib/capistrano/tasks' if you have any defined.
 Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r }

@@ -62,4 +62,7 @@ group :test do
   gem "selenium-webdriver", "~> 2.33.0"
 end
 
-gem 'capistrano', '~> 3.0.0'
+gem 'capistrano', '~> 3.0.1'
+gem 'capistrano-rbenv', github: "capistrano/rbenv"
+gem 'capistrano-bundler'
+gem 'therubyracer'
