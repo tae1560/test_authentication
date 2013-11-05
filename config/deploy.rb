@@ -1,9 +1,10 @@
-set :application, 'test_authentication'
+application = 'test_authentication'
+set :application, application
 set :repo_url, 'https://github.com/tae1560/test_authentication.git'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
-set :deploy_to, '/home/tae1560/test_authentication'
+set :deploy_to, '/home/tae1560/apps/test_authentication'
 set :scm, :git
 
 # set :format, :pretty
@@ -36,5 +37,64 @@ namespace :deploy do
   end
 
   after :finishing, 'deploy:cleanup'
+  after :finished, "deploy:unicorn_restart"
+
+  %w[start stop restart].each do |command|
+    puts "task unicorn_#{command}"
+    desc "#{command} unicorn server"
+    task "unicorn_#{command}" do
+
+      on roles(:app) do
+        execute "test -f /etc/init.d/unicorn_#{application} && /etc/init.d/unicorn_#{application} #{command} || echo file is not exist"
+
+        if test "[ -f /etc/init.d/unicorn_#{application} ]"
+          puts "file exist"
+        else
+          puts "file not exist"
+        end
+      end
+    end
+  end
+
+  task :setup do
+    invoke 'deploy'
+    invoke 'deploy:setup_config'
+    puts "setup"
+  end
+
+  task :setup_config do
+    on roles(:app) do
+      #execute "sudo ln -nfs #{current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"
+      #sudo "ln -nfs #{current_path}/config/nginx.conf /etc/nginx/sites-enabled/#{application}"
+      #sudo "ln -nfs #{current_path}/config/unicorn_init.sh /etc/init.d/unicorn_#{application}"
+      execute "mkdir -p #{shared_path}/config"
+      #put File.read("config/database.example.yml"), "#{shared_path}/config/database.yml"
+      execute "cp #{current_path}/config/database.example.yml #{shared_path}/config/database.yml"
+
+      puts "Now edit the config files in x#{shared_path}."
+
+      #invoke 'deploy:symlink_config'
+      execute "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    end
+  end
+  #after "deploy:setup", "deploy:setup_config"
+
+  task :symlink_config do
+    on roles(:app) do
+      execute "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    end
+  end
+  #after "deploy:finalize_update", "deploy:symlink_config"
+
+  desc "Make sure local git is in sync with remote."
+  task :check_revision do
+    on roles(:web) do
+      unless `git rev-parse HEAD` == `git rev-parse origin/master`
+        puts "WARNING: HEAD is not the same as origin/master"
+        puts "Run `git push` to sync changes."
+        exit
+      end
+    end
+  end
 
 end
